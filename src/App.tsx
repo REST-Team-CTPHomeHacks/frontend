@@ -1,5 +1,5 @@
 import React from 'react';
-import './DaySlot';
+import { DaySlot } from "./DaySlot";
 import logo from './logo.svg';
 import './App.css';
  
