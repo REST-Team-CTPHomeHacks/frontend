@@ -1,10 +1,13 @@
 import * as React from 'react';
+import Button from 'react-bootstrap/Button';
 
 export class DaySlot extends React.Component {
     render(){
         return <div>
-            <h1>Hello World!</h1>
+            
+          
+            <Button>Hello World!</Button>
         </div>
     }
 }
-// export DaySlot;
+//export default DaySlot;
