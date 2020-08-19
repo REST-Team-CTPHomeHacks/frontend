@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
-
+import { DropdownButton,Dropdown } from 'react-bootstrap';
 /*export default class addModal extends React.Component<{},{}>{
 constructor(props){
     super(props)
@@ -35,20 +35,35 @@ render(){
 }
 }*/
 
-export class AddModal extends React.Component<{show: boolean, toggleModal?},{message:string}>{
+export class AddModal extends React.Component<{show: boolean, toggleModal?,dummymethod?},{name:string,description:string,ddTitle:string}>{
   constructor(props){
       super(props)
       this.state={
-         message: ""
+        name:" ",
+        description:" ",
+        ddTitle: "Please select a day."
       }
   }
 
-  onChange= (e) =>{
-      this.setState({
-          message:e.target.value 
-      })
-  }
-  
+  descChange= (e) =>{
+    this.setState({
+        description:e.target.value 
+    })
+}
+nameChange= (e)=>{
+    this.setState({
+        name:e.target.value
+    })
+}
+returnValues=()=>{
+    var element= (document.getElementById('workToggle') as HTMLFormElement);
+        var isChecked = element.checked;
+        if (isChecked){
+            alert("Checked")
+        }
+        alert(this.state.name + this.state.description)
+        this.props.dummymethod(this.state.name,this.state.description,isChecked)
+}
   render(){
     return (
       <div>
@@ -58,18 +73,33 @@ export class AddModal extends React.Component<{show: boolean, toggleModal?},{mes
             <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              <div>
-              <input type="text" onChange={this.onChange}></input>
-
+          <div>
+              <form>
+              <label>Please select a day:</label><br/>
+              <select>
+                <option value="Mon">Monday</option>
+                <option value="Tues">Tuesday</option>
+                <option value="Wed">Wednesday</option>
+                <option value="Thurs">Thursday</option>
+                <option value="Fri">Friday</option>
+                <option value="Sat">Saturday</option>
+                <option value="Sun">Sunday</option>
+              </select><br/>
+              <label>Name:</label><br/>
+              <input type="text" name="name" onChange={this.nameChange}></input><br/>
+              <label>Description:</label><br/>
+              <input type="text" name="description" onChange={this.descChange}></input><br/>
+              <label>Work:</label>
+              <input type="checkbox" id="workToggle" name="workToggle"></input>
+             
+              </form>
               </div>
               
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary">
-              Close
-            </Button>
-            <Button variant="primary">
-              Submit Event
+           
+            <Button variant="primary" onClick={this.returnValues}>
+              Submit Activity
             </Button>
           </Modal.Footer>
         </Modal>

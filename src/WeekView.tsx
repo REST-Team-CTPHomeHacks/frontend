@@ -14,7 +14,7 @@ enum Day {
     Sa,
 }
 
-export class WeekView extends React.Component<{initialActivities: Activity[] }, {activities: Activity[], showModal: boolean}> {
+export class WeekView extends React.Component<{initialActivities: Activity[]}, {activities: Activity[], showModal: boolean}> {
     constructor(props) {
         super(props)
 
@@ -31,7 +31,11 @@ export class WeekView extends React.Component<{initialActivities: Activity[] }, 
             showModal: this.state.showModal ? false : true
         })
     }
-    
+    dummyMethod(name:string,desc:string,check:boolean){
+            if(check){
+                alert(name+" "+desc)
+            }
+    }
     render() {
         return (
             <div>
@@ -45,7 +49,7 @@ export class WeekView extends React.Component<{initialActivities: Activity[] }, 
                     ))
                 }
 
-                <AddModal show={this.state.showModal} toggleModal={this.toggleModal}/>
+                <AddModal show={this.state.showModal} dummymethod={this.dummyMethod.bind(this)} toggleModal={this.toggleModal}/>
             </div>
         )
     }
