@@ -2,12 +2,11 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Collapse from 'react-bootstrap/Collapse';
-import {Example} from './AddModal';
+import {AddModal} from './AddModal';
 import {Activity} from '../types';
 
 type DayState = {
    collapseToggled:boolean,
-   showModal:boolean,
    collapseContent:string
 }
 export class DaySlot extends React.Component<{},DayState> {
@@ -15,7 +14,6 @@ export class DaySlot extends React.Component<{},DayState> {
      super(props)
      this.state= {
         collapseToggled:false,
-        showModal:false,
         collapseContent: " asdf " 
      }
     }
@@ -31,19 +29,8 @@ export class DaySlot extends React.Component<{},DayState> {
          })
 
     }
-    modalTest(text:string){
-       alert(text)
-       this.eventsTextUpdater(text)
-    }
-    eventsTextUpdater(willAppend:string){  
-        alert("Updating")
-        this.setState({ 
-            collapseContent: this.state.collapseContent +"<br/>"+ willAppend
-        })
-    }
     render(){
-       
-  
+
         return <div>
        
            {/*The gist of things is that we want to use a card to display each day.
@@ -58,7 +45,6 @@ export class DaySlot extends React.Component<{},DayState> {
              {/* Body should contain a little message depending on the work/leisure ratio. 
              Should also show the exact hours spent on work and leisure
              We also want to add the collapse in this card body if possible. */}
-            <Example modalReturn={this.modalTest.bind(this)} ></Example>
             <Collapse in={this.state.collapseToggled}>
              
          <div id="example-collapse-text">

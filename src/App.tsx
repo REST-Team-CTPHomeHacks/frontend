@@ -1,5 +1,6 @@
 import React from 'react';
 import { DaySlot } from "./DaySlot";
+import { WeekView } from './WeekView'
 import logo from './logo.svg';
 import './App.css';
 
@@ -21,7 +22,7 @@ function App() {
         >
           Learn React
         </a>
-       <DaySlot></DaySlot>
+       <WeekView initialActivities={[]}/>
       </header>
     
     </div>

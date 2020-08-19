@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+
 /*export default class addModal extends React.Component<{},{}>{
 constructor(props){
     super(props)
@@ -33,40 +34,27 @@ render(){
     </div>
 }
 }*/
-export class Example extends React.Component<{modalReturn?},{setShow:boolean,message:string}>{
-    constructor(props){
-        super(props)
-        this.state={
-           setShow:false,
-           message:" "
-        }
-    }
-    togglevisibility(){
-        this.setState({
-            setShow: !this.state.setShow
-        }
-        )
-    }
-    onChange= (e) =>{
-        this.setState({
-            message:e.target.value 
-        })
-    }
-    ret = () =>{
-        this.togglevisibility()
-        this.props.modalReturn(this.state.message)
-       
-    }
+
+export class AddModal extends React.Component<{show: boolean, toggleModal?},{message:string}>{
+  constructor(props){
+      super(props)
+      this.state={
+         message: ""
+      }
+  }
+
+  onChange= (e) =>{
+      this.setState({
+          message:e.target.value 
+      })
+  }
   
   render(){
     return (
       <div>
-        <Button variant="primary" onClick={()=>this.togglevisibility()}>
-          Launch demo modal
-        </Button>
   
-        <Modal show={this.state.setShow} onHide={()=>this.togglevisibility()}>
-          <Modal.Header closeButton>
+        <Modal show={this.props.show}>
+          <Modal.Header closeButton onClick={this.props.toggleModal}>
             <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -77,10 +65,10 @@ export class Example extends React.Component<{modalReturn?},{setShow:boolean,mes
               
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={()=>this.togglevisibility()}>
+            <Button variant="secondary">
               Close
             </Button>
-            <Button variant="primary" onClick={this.ret}>
+            <Button variant="primary">
               Submit Event
             </Button>
           </Modal.Footer>
