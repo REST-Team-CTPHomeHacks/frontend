@@ -3,6 +3,7 @@ import { DaySlot } from './DaySlot'
 import { AddModal } from './AddModal'
 import { Button } from 'react-bootstrap'
 import { Activity } from '../types'
+import axios from 'axios'
 
 enum Day {
     Su,
@@ -31,11 +32,38 @@ export class WeekView extends React.Component<{initialActivities: Activity[]}, {
             showModal: this.state.showModal ? false : true
         })
     }
+
     dummyMethod(name:string,desc:string,check:boolean){
-            if(check){
-                alert(name+" "+desc)
-            }
+        let newDate = new Date("08-20-2020")
+        let newActivity : Activity = {
+            date: newDate,
+            name: name,
+            description: desc,
+            time_start: "05:20:30",
+            time_end: "08:20:20",
+            work: check
+        }
+
+        axios.post('http://localhost:1337/push_activity', newActivity)
+        .then(() => {
+            console.log('worked')
+        })
     }
+
+    componentDidMount() {
+        let date = new Date();
+
+        let month = date.getMonth()+1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth();
+        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        let year = date.getFullYear();
+
+        axios.get(`http://localhost:1337/activities/${month + "-" + day + "-" + year}`)
+        .then(res => {
+            console.log(res)
+        })
+
+    }
+
     render() {
         return (
             <div>
