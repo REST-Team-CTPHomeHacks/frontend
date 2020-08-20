@@ -1,91 +1,122 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
-/*export default class addModal extends React.Component<{},{}>{
-constructor(props){
-    super(props)
-}
-render(){
-    return <div>
-         <Modal
-      
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Centered Modal</h4>
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-          dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-          consectetur ac, vestibulum at eros.
-        </p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button >Close</Button>
-      </Modal.Footer>
-    </Modal>
-    </div>
-}
-}*/
-export class Example extends React.Component<{modalReturn?},{setShow:boolean,message:string}>{
+import { DropdownButton,Dropdown } from 'react-bootstrap';
+import TimePicker from 'react-time-picker';
+import { Activity } from '../types';
+
+
+export class AddModal extends React.Component<{show: boolean, toggleModal?, dummyMethod?},
+    {name:string,description:string,ddTitle:string,startTime:string,endTime:string, day: string }>{
     constructor(props){
         super(props)
+
         this.state={
-           setShow:false,
-           message:" "
+            name:" ",
+            description:" ",
+            ddTitle: "Please select a day.",
+            day: "",
+            startTime:"10:00" ,
+            endTime:"10:00"
         }
     }
-    togglevisibility(){
+
+    startTimeChange = (e) =>{
         this.setState({
-            setShow: !this.state.setShow
-        }
-        )
-    }
-    onChange= (e) =>{
-        this.setState({
-            message:e.target.value 
+            startTime: e
         })
     }
-    ret = () =>{
-        this.togglevisibility()
-        this.props.modalReturn(this.state.message)
-       
-    }
-  
-  render(){
-    return (
-      <div>
-        <Button variant="primary" onClick={()=>this.togglevisibility()}>
-          Launch demo modal
-        </Button>
-  
-        <Modal show={this.state.setShow} onHide={()=>this.togglevisibility()}>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              <div>
-              <input type="text" onChange={this.onChange}></input>
 
-              </div>
-              
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={()=>this.togglevisibility()}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.ret}>
-              Submit Event
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    );
-  }
-  }
+    endTimeChange=(e)=>{
+        this.setState({
+            endTime: e
+        })
+    }
+
+    descChange= (e) =>{
+        this.setState({
+            description:e.target.value
+        })
+    }
+
+    nameChange= (e)=>{
+        this.setState({
+            name:e.target.value
+        })
+    }
+
+    dayChange= (e)=>{
+        this.setState({
+            day: e.target.value
+        })
+    }
+
+    returnValues = () => {
+        var element= (document.getElementById('workToggle') as HTMLFormElement);
+        var isChecked = element.checked;
+
+        let activity: Activity = {
+            name: this.state.name || null,
+            day: this.state.day || null,
+            description: this.state.description || null,
+            time_start: this.state.startTime || null,
+            time_end: this.state.endTime || null,
+            work: isChecked || false,
+        };
+        this.props.dummyMethod(activity);
+    }
+
+    render(){
+        return (
+            <div>
+                <Modal show={this.props.show}>
+                    <Modal.Header closeButton onClick={this.props.toggleModal}>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div>
+                            <form>
+                                <label>Please select a day:</label><br/>
+                                <select name="dayOfWeek" onChange={this.dayChange}>
+                                    <option value="Sun">Sunday</option>
+                                    <option value="Mon">Monday</option>
+                                    <option value="Tues">Tuesday</option>
+                                    <option value="Wed">Wednesday</option>
+                                    <option value="Thurs">Thursday</option>
+                                    <option value="Fri">Friday</option>
+                                    <option value="Sat">Saturday</option>
+                                </select>
+                                <br/>
+                                <label>Starting time:</label><br/>
+                                <TimePicker
+                                    onChange={this.startTimeChange}
+                                    value={this.state.startTime}
+                                    disableClock={true}
+                                /> <br/>
+                                <label>Ending time:</label> <br/>
+                                <TimePicker
+                                    onChange={this.endTimeChange}
+                                    value={this.state.endTime}
+                                    disableClock={true}
+                                /> <br/>
+                                <label>Name:</label><br/>
+                                <input type="text" name="name" onChange={this.nameChange}></input><br/>
+                                <label>Description:</label><br/>
+                                <input type="text" name="description" onChange={this.descChange}></input><br/>
+                                <label>Work:</label>
+                                <input type="checkbox" id="workToggle" name="workToggle"></input>
+
+                            </form>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+
+                        <Button variant="primary" onClick={this.returnValues}>
+                            Submit Activity
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        );
+    }
+}
