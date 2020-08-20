@@ -3,29 +3,33 @@ import { DaySlot } from './DaySlot'
 import { AddModal } from './AddModal'
 import { Button } from 'react-bootstrap'
 import { Activity } from '../types'
-import axios from 'axios'
+import moment from "moment";
+import axios from 'axios';
 
 enum Day {
-    Su,
-    Mo,
-    Tu,
-    We,
-    Th,
-    Fr,
-    Sa,
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
 }
 
-export class WeekView extends React.Component<{initialActivities: Activity[]}, {activities: Activity[], showModal: boolean}> {
+export class WeekView extends React.Component<{initialActivities: Activity[][]}, {activities: Activity[][], showModal: boolean}> {
     constructor(props) {
         super(props)
 
         this.state = {
             showModal: false,
-            activities: props.initialActivities
+            activities: [[], [], [], [], [], [], []]
         }
+        console.log(this.state.activities)
 
         this.toggleModal = this.toggleModal.bind(this)
     }
+
+    date = new Date();
 
     toggleModal() {
         this.setState({
@@ -45,9 +49,9 @@ export class WeekView extends React.Component<{initialActivities: Activity[]}, {
         }
 
         axios.post('http://localhost:1337/push_activity', newActivity)
-        .then(() => {
-            console.log('worked')
-        })
+            .then(() => {
+                console.log('worked')
+            })
     }
 
     componentDidMount() {
@@ -58,26 +62,40 @@ export class WeekView extends React.Component<{initialActivities: Activity[]}, {
         let year = date.getFullYear();
 
         axios.get(`http://localhost:1337/activities/${month + "-" + day + "-" + year}`)
-        .then(res => {
-            console.log(res)
-        })
+            .then(res => {
+                let newActivities = [...this.state.activities];
 
+                console.log(res.data.data[0])
+                res.data.data.forEach((date) => {
+                    let dayNum = moment(date.date).day();
+
+                    date.activities.forEach((activity) => {
+                        console.log(activity);
+                        let formattedActivity = {
+                            name: activity.activity_name,
+                            work: activity.is_work,
+                            ...activity,
+                        };
+                        console.log(formattedActivity);
+
+                        newActivities[dayNum].push(formattedActivity);
+                    });
+                });
+                this.setState({
+                    activities: newActivities,
+                });
+            })
     }
 
     render() {
         return (
             <div>
-
-                <Button onClick={this.toggleModal}>Hi</Button>
-
-                {
-                    this.state.activities.map((activity, i) => (
-                        <DaySlot/>
-                        //<DaySlot prop={activity, Day.i}/>
-                    ))
-                }
-
-                <AddModal show={this.state.showModal} dummymethod={this.dummyMethod.bind(this)} toggleModal={this.toggleModal}/>
+                <Button onClick={this.toggleModal}>Toggle Modal</Button>
+                {this.state.activities.map((activity, i) => (
+                    <DaySlot activities={activity} dayName={Day[i]}
+                             dayNum={moment(this.date).day(Day[i]).format("dddd, MMMM Do YYYY")} />
+                ))}
+                <AddModal show={this.state.showModal} dummyMethod={this.dummyMethod.bind(this)} toggleModal={this.toggleModal}/>
             </div>
         )
     }
